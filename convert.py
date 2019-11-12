@@ -164,6 +164,7 @@ def load_feeder_info_from_file(path):
                 device_name=row[2], 
                 stack_x_offset=stof(row[3]),
                 stack_y_offset=stof(row[4]),
+                # dpv expects the size of components to be in 1/100 mm
                 component_size_x=stof(row[5])*100,
                 component_size_y=stof(row[6])*100,
                 height=stof(row[7]),
