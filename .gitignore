@@ -1,0 +1,6 @@
+/kicad-to-dpv
+/output
+/__pycache__
+*.pos
+*.ods#
+*.csv
