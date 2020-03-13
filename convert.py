@@ -172,7 +172,7 @@ def load_feeder_info_from_file(path):
                 head=stoi(row[9]),
                 angle_compensation=stoi(row[10]),
                 feed_spacing=stoi(row[11]),
-                place_component=(row[12] == 'Y'),
+                place_component=(row[12]),
                 check_vacuum=(row[12] == 'Y'),
                 use_vision=(row[14] == 'Y'),
                 centroid_correction_x=stof(row[15]),
@@ -202,7 +202,7 @@ def load_cuttape_info_from_file(path):
                 head=stoi(row[9]),
                 angle_compensation=stoi(row[10]),
                 feed_spacing=0,#stoi(row[9]),
-                place_component=(row[11] == 'Y'),
+                place_component=(row[11]),
                 check_vacuum=(row[12] == 'Y'),
                 use_vision=(row[13] == 'Y'),
                 centroid_correction_x=stof(row[14]),
@@ -439,8 +439,8 @@ def add_components(f, include_newskip):
             record_ID,
             components[i].head,
             components[i].feeder_ID if components[i].feeder_ID != "NewSkip" else 99,
-            float(components[i].x),
-            float(components[i].y),
+            round(float(components[i].x), 2),
+            round(float(components[i].y), 2),
             float(components[i].rotation),
             float(components[i].height),
             mount_value,
@@ -575,21 +575,32 @@ def main(component_position_file, feeder_config_file, cuttape_config_file, outfi
             if available_feeders[j].feeder_ID == components[i].feeder_ID:
                 available_feeders[j].count_in_design += 1
 
+    comp_to_mount_count = 0
+    comp_not_mounted_count = 0
+    used_feeders_count = 0
+
     print("\nComponents to mount:")
     for comp in [c for c in components if c.feeder_ID not in ['NoMount', 'NewSkip']]:
         print (comp)
-
+        comp_to_mount_count += 1
+      
+    print('Total components: {}\n'.format(comp_to_mount_count))
 
     print("\nComponents Not Mounted:")
     for comp in [c for c in components if c.feeder_ID in ['NoMount', 'NewSkip']]:
         print (comp)
+        comp_not_mounted_count += 1
         
+    print('Total components: {}\n'.format(comp_not_mounted_count))
 
     print("\nUsed Feeders:")
     for i in range(len(available_feeders)):
         if available_feeders[i].count_in_design != 0 and available_feeders[i].feeder_ID != "NoMount":
             print(available_feeders[i])
+            used_feeders_count += 1
     
+    print('Total feeders used: {}\n'.format(used_feeders_count))
+
     # Output to machine recipe file
     with open(outfile, 'w', newline='\r\n') as f:
         add_header(f, outfile, component_position_file)
