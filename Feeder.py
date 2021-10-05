@@ -31,7 +31,7 @@ class Feeder():
         self.feeder_ID = feeder_ID
         self.device_name = device_name.strip()
         self.stack_x_offset = stack_x_offset
-        self.stack_y_offset = stack_y_offset        
+        self.stack_y_offset = stack_y_offset
         self.height = height
         self.speed = speed
         self.component_size_x = component_size_x
